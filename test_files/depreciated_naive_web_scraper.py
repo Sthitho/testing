@@ -1,3 +1,7 @@
+'''
+coomer webscraper
+'''
+
 from bs4 import BeautifulSoup as bs
 from urllib.request import Request, urlopen, urlretrieve, build_opener, install_opener
 from pathlib import Path
