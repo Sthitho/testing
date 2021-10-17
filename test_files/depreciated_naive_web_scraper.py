@@ -10,7 +10,7 @@ from urllib.request import Request, urlopen, urlretrieve, build_opener, install_
 from pathlib import Path
 from tqdm.auto import tqdm
 from sys import argv
-from subprocess import run # if want to do big download then shutdown machine
+# from subprocess import run # if want to do big download then shutdown machine
 
 class TqdmUpTo(tqdm): # cute lil progress bar
 	def update_to(self, b=1, bsize=1, tsize=None):
