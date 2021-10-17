@@ -1,12 +1,16 @@
 '''
 coomer webscraper
+uses single threading
+not pog
+
 '''
 
 from bs4 import BeautifulSoup as bs
 from urllib.request import Request, urlopen, urlretrieve, build_opener, install_opener
 from pathlib import Path
 from tqdm.auto import tqdm
-import sys, subprocess
+from sys import argv
+from subprocess import run # if want to do big download then shutdown machine
 
 class TqdmUpTo(tqdm): # cute lil progress bar
 	def update_to(self, b=1, bsize=1, tsize=None):
@@ -59,6 +63,6 @@ if __name__ == '__main__':
 	opener = build_opener() # handle ERROR403
 	opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 	install_opener(opener)
-	for i in sys.argv[1:]:
+	for i in argv[1:]:
 		main(i)
 	#subprocess.run(["shutdown", "-s"])
