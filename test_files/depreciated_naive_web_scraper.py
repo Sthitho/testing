@@ -26,7 +26,7 @@ def get_stuff(url): # get da stuff : links to download, thread for subdirectory 
 	thread = url.split('/')[-1]+' '+soup.find('span', {'class':'subject'}).getText() if '4chan' in url else soup.find('meta', {'property':'article:published_time'})['content'][2:10]+' '+soup.find('meta', {'property':'og:title'})['content']
 	return links, thread[:8] if len(thread) == 9 else thread, Path(base_path, '4chan' if '4chan' in url else 'fapdungeon') # creates/locates 2 directories for 4chan or fapdungeon threads
 
-def search_soup(soup, url, tag, con1, con2): # wanted to experiment with inserting conditional statement - i.e. title=False as variables but didn't work out :(
+def search_soup(soup, url, tag, con1, con2): # wanted to experiment with inserting conditional statement. I realise now that I must use ** splat method to pass through boolean declarations
 	return [i[url] for i in soup.find_all(tag,{con1:con2})]
 
 def resort_links(links, base_dir, thread): # if you are redownloading a thread
