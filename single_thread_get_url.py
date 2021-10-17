@@ -45,3 +45,4 @@ if __name__ == '__main__':
     from sys import argv
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(argv[1:]))
+    print('HELLO WORLD')
