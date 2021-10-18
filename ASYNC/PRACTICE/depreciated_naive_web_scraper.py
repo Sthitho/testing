@@ -18,6 +18,7 @@ class TqdmUpTo(tqdm): # cute lil progress bar
 			self.total = tsize
 		self.update(b*bsize-self.n)
 
+
 def download_media(url, thread, base_dir): # download downloadable url
 	filename = url.split('/')[-1].split('?')[0]
 	with TqdmUpTo(unit = 'B', unit_scale = True, unit_divisor = 1024, miniters = 1, desc = filename) as t:
