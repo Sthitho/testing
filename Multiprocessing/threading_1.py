@@ -29,12 +29,12 @@ class DownloadHref(threading.Thread):
         urlretrieve(url, dest)
 
 
-def download(urls, destfolder, numthreads=4):
+def download(urls, destfolder):
     queue = Queue()
     for url in urls:
         queue.put(url)
 
-    for i in range(numthreads):
+    for _ in range(len(urls)):
         t = DownloadHref(queue, destfolder)
         t.start()
 
