@@ -2,6 +2,15 @@ import asyncio
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup as Abs
 from sys import argv
+import logging
+import os
+
+
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(handler)
 
 
 async def web_scraper(urls):
@@ -13,26 +22,23 @@ async def web_scraper(urls):
         print()
         for dict_ in list_of_hrefs:
             for key in dict_:
-                print(f'[{key}] thread hrefs: {len(dict_[key])}')
+                print(f'[{key}] hrefs: {len(dict_[key])}')
                 total += len(dict_[key])
-        print('\nThe total amount of hrefs: '+str(total))
+        print(f'The total amount of hrefs: {total}\n')
 
 
 async def fetch_and_parse(session, url):
-    html = await fetch(session, url)
+    logger.debug('Crawling %s', url)
+    async with session.get(url) as response:
+        html = await response.text()
     para = parse(html)
     return para
-
-
-async def fetch(session, url):
-    async with session.get(url) as response:
-        return await response.text()
 
 
 def parse(html):
     soup = Abs(html, features='html.parser')
     links = [tag['href'] for tag in soup.find_all('a', {'class': 'fileThumb'})]
-    thread = soup.find('input', {'name': 'resto'})['value'] + " " + soup.find('span', {'class': 'subject'}).getText()
+    thread = soup.find('div', {'class': 'thread'})['id'][1:] + " " + soup.find('span', {'class': 'subject'}).getText()
     return {thread: links}
 
 

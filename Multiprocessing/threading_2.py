@@ -5,7 +5,7 @@ from sys import argv
 from multiprocessing import Pool
 
 def main(*args):
-
+    pass
 
 if __name__ == '__main__':
     main('https://boards.4chan.org/gif/thread/21076212', 'https://boards.4chan.org/gif/thread/21023445')

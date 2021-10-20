@@ -1,13 +1,13 @@
 import asyncio
 import aiohttp
 import bs4
-import tqdm
+import os
 
 
 async def get(*args, **kwargs):
     async with aiohttp.ClientSession() as session:
         async with session.get(*args, **kwargs) as resp:
-            return (await resp.text())
+            return await resp.text()
 
 
 def first_magnet(page):
@@ -24,8 +24,9 @@ async def print_magnet(query):
     print('{}: {}'.format(query, magnet))
 
 
-distros = ['archlinux', 'ubuntu', 'debian']
-sem = asyncio.Semaphore(5)
-loop = asyncio.get_event_loop()
-f = asyncio.wait([print_magnet(d) for d in distros])
-loop.run_until_complete(f)
+if __name__ == '__main__':
+    distros = ['archlinux', 'ubuntu', 'debian']
+    sem = asyncio.Semaphore(5)
+    loop = asyncio.get_event_loop()
+    f = asyncio.wait([print_magnet(d) for d in distros])
+    loop.run_until_complete(f)
