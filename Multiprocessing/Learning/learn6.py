@@ -1,11 +1,13 @@
 from multiprocessing import Process, Lock
 
-def f(l, i):
-    l.acquire()
+
+def f(lim, i):
+    lim.acquire()
     try:
         print('hello world', i)
     finally:
-        l.release()
+        lim.release()
+
 
 if __name__ == '__main__':
     lock = Lock()

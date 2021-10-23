@@ -1,7 +1,6 @@
 import asyncio
 import aiohttp
 import bs4
-import os
 
 
 async def get(*args, **kwargs):
