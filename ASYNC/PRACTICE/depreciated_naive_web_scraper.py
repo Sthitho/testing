@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup as BS
+from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen, urlretrieve, build_opener, install_opener
 from pathlib import Path
 from tqdm.auto import tqdm
@@ -21,14 +21,25 @@ def download_media(url: str, thread: str, base_dir: Path):  # download downloada
 
 def get_stuff(url: str):  # get da stuff
 	base_path = r'C:\nsfw'  # change base_path to where you want the directory to be
-	soup = BS(urlopen(Request(url)).read(), features='html.parser')
-	links = search_soup(soup, 'href', 'a', 'class', 'fileThumb') if '4chan' in url else search_soup(soup, 'src', 'source', 'type', 'video/mp4') + [i['src'] for i in soup.find_all('img', {'loading': 'lazy'}, title=False)] + search_soup(soup, 'src', 'img', 'class', 'clean-gallery-single-post-thumbnail wp-post-image')
-	thread = url.split('/')[-1]+' '+soup.find('span', {'class':'subject'}).getText() if '4chan' in url else soup.find('meta', {'property': 'article:published_time'})['content'][2:10]+' '+soup.find('meta', {'property': 'og:title'})['content']
+	soup = BeautifulSoup(urlopen(Request(url)).read(), features='html.parser')
+	if '4chan' in url:
+		links = search_soup(soup, 'href', 'a', 'class', 'fileThumb')
+		thread = url.split('/')[-1] + ' ' + soup.find('span', {'class': 'subject'}).getText()
+	else:
+		links = {
+				search_soup(soup, 'src', 'source', 'type', 'video/mp4') +
+				[tag['src'] for tag in soup.find_all('img', {'loading': 'lazy'}, title=False)] +
+				search_soup(soup, 'src', 'img', 'class', 'clean-gallery-single-post-thumbnail wp-post-image')
+		}
+		thread = {
+				soup.find('meta', {'property': 'article:published_time'})['content'][2:10] + ' ' +
+				soup.find('meta', {'property': 'og:title'})['content']
+		}
 	return links, thread[:8] if len(thread) == 9 else thread, Path(base_path, '4chan' if '4chan' in url else 'fapdungeon')
 
 
 def search_soup(soup, url, tag, con1, con2):
-	return [i[url] for i in soup.find_all(tag, {con1: con2})]
+	return [tag[url] for tag in soup.find_all(tag, {con1: con2})]
 
 
 def resort_links(links, base_dir, thread):  # if you are re-downloading a thread
@@ -48,7 +59,8 @@ def main(url):
 	links, thread, base_dir = get_stuff(url)
 	thread = thread.replace("\\", " ").replace("/", " ")
 	print(thread)
-	if Path(base_dir, thread).exists(): links = resort_links(links, base_dir, thread)  # Check if old thread
+	if Path(base_dir, thread).exists():
+		links = resort_links(links, base_dir, thread)  # Check if old thread
 	print('\nThread Name : '+thread)
 	print('Total links in thread : '+str(len(links)))
 	Path(base_dir, thread).mkdir(parents=True, exist_ok=True)  # make subdirectory
@@ -60,7 +72,7 @@ def main(url):
 
 
 if __name__ == '__main__':
-	opener = build_opener() # handle ERROR403
+	opener = build_opener()  # handle ERROR403
 	opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 	install_opener(opener)
 	for i in argv[1:]:
